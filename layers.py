@@ -1,5 +1,5 @@
 from typing import Callable, Optional, Any, List
-
+from functions import Function
 from abc import ABC, abstractmethod
 # import inspect
 import numpy as np
@@ -54,7 +54,7 @@ class HiddenLayer(Layer):
 
     def __init__(self, name, n_nodes, activation, parent) -> None:
         super().__init__(name=name, n_nodes=n_nodes)
-        self.activation = activation
+        self.activation = Function(activation)
         self.parent = parent
 
         self.__weights = np.ones((self.n_nodes, self.parent.n_nodes)).tolist()
@@ -71,11 +71,11 @@ class HiddenLayer(Layer):
         # 1. multiplying the input vector by the weight matrix
         # 2. adding the bias verctor
         for i in range(self.n_nodes):
-            outputs.append( np.add( np.multiply(inputs, self.__weights[i]),
+            outputs.append( sum( np.multiply(inputs, self.__weights[i]),
                                     self.__bias[i] )
                           )
         # 3. applying activation function
-        return (self.activation(outputs)).tolist()
+        return (self.activation.function(np.array(outputs))).tolist()
 
 
 

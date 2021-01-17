@@ -18,7 +18,7 @@ class MultilayerPerceptron:
     n_inputs: int
         the number of perceptron inputs
     depth: int
-        the number of perceptron layers
+        the number of perceptron hidden layers
     """
 
     def __init__(self, n_inputs) -> None:
@@ -28,7 +28,7 @@ class MultilayerPerceptron:
         self.depth = 0
 
 
-    def add_layer(self, name: str, activation: Callable[[float], float],
+    def add_layer(self, name: str, activation: str,
                     n_nodes: int) -> None:
         """Adds a layer to the end of the perceptron layers
 
@@ -56,11 +56,9 @@ class MultilayerPerceptron:
         last in list)
         """
 
-        layers = []
-        layer = self.__last_layer
+        layers = [self.__last_layer]
         for _ in range(self.depth):
-            layers.append(layer.parent)
-            layer = layer.parent
+            layers.append(layers[-1].parent)
         return layers[::-1]
 
 
@@ -69,6 +67,7 @@ class MultilayerPerceptron:
         for layer in self.get_layers():
             output = layer.get_output(inputs)
             inputs = output
+        return output
 
 
 
@@ -80,7 +79,9 @@ class MultilayerPerceptron:
                                             self.get_layers()[1:]):
             for i in range(curr_layer.n_nodes):
                 for j in range(next_layer.n_nodes):
-                    graph.add_edge("$%s_{%i}}$" % (curr_layer.name, i), "$%s_{%i}}$" % (next_layer.name, j))
+                    graph.add_edge("$%s_{%i}}$" % (curr_layer.name, i),
+                                    "$%s_{%i}}$" % (next_layer.name, j),
+                                    label="gege")
         return graph
 
 
